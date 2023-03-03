@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/insert")
 public class EmpInsertController {
     @GetMapping("/emp")
-    public String insertEmpFrom(Model model) { // view에 데이터를 전달하기 위해 사용
+    public String insertEmpFrom(Model model) {
         model.addAttribute("employees", new EmpVO());
         return "thymeleafEx/empInsertView";
     }
