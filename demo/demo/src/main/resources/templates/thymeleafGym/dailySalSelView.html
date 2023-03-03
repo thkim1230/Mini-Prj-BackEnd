@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http:/www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>매출 정보</h2>
+<table border="1" style="border-collapse: collapse;">
+    <thead style="background-color: royalblue; color: white;">
+    <tr>
+        <th>날짜</th>
+        <th>매출</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="dailySalSel : ${dailySalSel}">
+        <td th:text="${dailySalSel.p_DateStr}"></td>
+        <td th:text="${dailySalSel.sales}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/insert")
 public class InsertCtrl {
     @GetMapping("/sales")
-    public String insertEmpFrom(Model model) {
+    public String insertSalesFrom(Model model) {
         model.addAttribute("sales", new SalesVO());
-        return "salesTl/salesInsertView";
+        return "thymeleafGym/salesInsertView";
     }
 
     @PostMapping("/sales")
-    public String saveEmployee(@ModelAttribute("sales") SalesVO salesVO) {
+    public String saveSales() {
         SalesDAO dao = new SalesDAO();
         dao.salesInsert();
-        return "salesTl/salesInsertRes";
+        return "thymeleafGym/salesInsertRes";
     }
 }

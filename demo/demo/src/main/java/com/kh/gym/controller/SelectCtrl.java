@@ -13,10 +13,31 @@ import java.util.List;
 @RequestMapping( "/select")
 public class SelectCtrl {
     @GetMapping("/dailySalSel")
-    public String selectEmp(Model model) {
+    public String selectSales1(Model model) {
         SalesDAO dao = new SalesDAO();
         List<SalesVO> dailySalSel = dao.dailySalSel();
         model.addAttribute("dailySalSel", dailySalSel);
-        return "salesTl/dailySalSelView";
+        return "thymeleafGym/dailySalSelView";
+    }
+    @GetMapping("/monthlySalSel")
+    public String selectSales2(Model model) {
+        SalesDAO dao = new SalesDAO();
+        List<SalesVO> monthlySalSel = dao.monthlySalSel();
+        model.addAttribute("monthlySalSel", monthlySalSel);
+        return "thymeleafGym/monthlySalSelView";
+    }
+    @GetMapping("/annualSalSel")
+    public String selectSales3(Model model) {
+        SalesDAO dao = new SalesDAO();
+        List<SalesVO> annualSalSel = dao.annualSalSel();
+        model.addAttribute("annualSalSel", annualSalSel);
+        return "thymeleafGym/annualSalSelView";
+    }
+    @GetMapping("/somDaySalSel")
+    public String selectSales4(Model model) {
+        SalesDAO dao = new SalesDAO();
+        List<SalesVO> somDaySalSel = dao.somDaySalSel();
+        model.addAttribute("somDaySalSel", somDaySalSel);
+        return "thymeleafGym/somDaySalSelView";
     }
 }

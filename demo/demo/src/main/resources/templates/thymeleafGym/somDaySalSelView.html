@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>일별 주문 내역 조회</title>
+</head>
+<body>
+<h1>일별 주문 내역 조회</h1>
+<form th:action="@{/insert/sales}" th:object="${sales}" method="post">
+  <div>
+    <label for="mem_ID">회원 번호 :</label>
+    <input type="text" id="mem_ID" th:field="*{mem_ID}" />
+  </div>
+  <div>
+    <label for="mName">회원 이름:</label>
+    <input type="text" id="mName" th:field="*{mName}" />
+  </div>
+  <div>
+    <label for="purchase">상품 이름:</label>
+    <input type="text" id="purchase" th:field="*{purchase}" />
+  </div>
+  <div>
+    <label for="sales">매출:</label>
+    <input type="text" id="sales" th:field="*{sales}" />
+  </div>
+  <div>
+    <label for="p_Date">구매 날짜:</label>
+    <input type="date" id="p_Date" th:field="*{p_Date}" />
+  </div>
+  <div>
+    <button type="submit">Save</button>
+  </div>
+</form>
+</body>
+</html>
