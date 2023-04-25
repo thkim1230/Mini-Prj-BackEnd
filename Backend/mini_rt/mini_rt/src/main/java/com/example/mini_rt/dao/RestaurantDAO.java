@@ -46,4 +46,38 @@ public class RestaurantDAO {
         }
         return list;
     }
+    // 매장정보
+    public List<RestaurantInfoVO> RtSelect(RestaurantInfoVO restaurantInfoVO){
+        List<RestaurantInfoVO> list = new ArrayList<>();
+        try{
+            String sql = "SELECT RESTAURANT_NOTICE,RESTAURANT_PHONE,RESTAURANT_INTRODUCE,RESTAURANT_HOURS,RESTAURANT_ADDR FROM RESTAURANT_INFO WHERE RESTAURANT_ID = ?";
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1,restaurantInfoVO.getRestaurantId());
+            rs = pStmt.executeQuery();
+            while (rs.next()){
+                String notice = rs.getString("RESTAURANT_NOTICE");
+                String phone = rs.getString("RESTAURANT_PHONE");
+                String introduce = rs.getString("RESTAURANT_INTRODUCE");
+                String hours = rs.getString("RESTAURANT_HOURS");
+                String addr = rs.getString("RESTAURANT_ADDR");
+
+                RestaurantInfoVO vo = new RestaurantInfoVO();
+                vo.setRestaurantNotice(notice);
+                vo.setRestaurantPhone(phone);
+                vo.setRestaurantIntroduce(introduce);
+                vo.setRestaurantHours(hours);
+                vo.setRestaurantAddr(addr);
+                list.add(vo);
+            }
+            Common.close(rs);
+            Common.close(pStmt);
+            Common.close(conn);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+
 }
