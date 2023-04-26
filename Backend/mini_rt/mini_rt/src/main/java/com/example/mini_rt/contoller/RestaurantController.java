@@ -2,13 +2,10 @@ package com.example.mini_rt.contoller;
 
 
 import com.example.mini_rt.dao.RestaurantDAO;
-import com.example.mini_rt.vo.RestaurantInfoVO;
+import com.example.mini_rt.vo.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,12 +14,44 @@ import java.util.List;
 
 public class RestaurantController {
 
-    @GetMapping("/restaurant/info/{restaurantId}")
-    public ResponseEntity<List<RestaurantInfoVO>> restaurantInfo(@PathVariable String restaurantId){
+    @GetMapping("/restaurant/info")
+    public ResponseEntity<List<RestaurantInfoVO>> restaurantInfo(@RequestParam String restaurantId){
         RestaurantDAO dao = new RestaurantDAO();
-        RestaurantInfoVO vo = new RestaurantInfoVO();
+        RestaurantVO vo = new RestaurantVO();
         vo.setRestaurantId(restaurantId);
+
         List<RestaurantInfoVO> list = dao.infoSelect(vo);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+    @GetMapping("/restaurant")
+    public ResponseEntity<List<JoinVO>> joinInfo (@RequestParam String restaurantId){
+        RestaurantDAO dao = new RestaurantDAO();
+        RestaurantVO vo = new RestaurantVO();
+        vo.setRestaurantId(restaurantId);
+
+        List<JoinVO> list = dao.rtSelect(vo);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @GetMapping("/restaurant/menu")
+    public ResponseEntity<List<RestMenuVO>> restaurantMenu(@RequestParam String restaurantId){
+        RestaurantDAO dao = new RestaurantDAO();
+        RestaurantVO vo = new RestaurantVO();
+        vo.setRestaurantId(restaurantId);
+
+        List<RestMenuVO> list = dao.menuSelect(vo);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @GetMapping("/restaurant/review")
+    public ResponseEntity<List<ReviewVO>> restaurantReview(@RequestParam String restaurantId){
+        RestaurantDAO dao = new RestaurantDAO();
+        RestaurantVO vo = new RestaurantVO();
+        vo.setRestaurantId(restaurantId);
+
+        List<ReviewVO> list = dao.reviewSelect(vo);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+
 }

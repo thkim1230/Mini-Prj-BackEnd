@@ -13,6 +13,6 @@ public class RestaurantVO {
     private String memberId;
     private String restaurantName;
     private Date restaurantDate;
-    private int resPos; //예약 가능한지
+    private boolean isAvailable; //예약 가능한지
     private String category;
 }
