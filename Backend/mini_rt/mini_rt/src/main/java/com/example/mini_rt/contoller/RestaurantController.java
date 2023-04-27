@@ -14,15 +14,26 @@ import java.util.List;
 
 public class RestaurantController {
 
-    @GetMapping("/restaurant/info")
-    public ResponseEntity<List<RestaurantInfoVO>> restaurantInfo(@RequestParam String restaurantId){
+
+    @GetMapping("/")
+    public ResponseEntity<List<String>> restaurantIdList () {
+        RestaurantDAO dao = new RestaurantDAO();
+
+        List<String> list = dao.restIdList();
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<JoinVO>> restaurantList (@RequestParam String restaurantId){
         RestaurantDAO dao = new RestaurantDAO();
         RestaurantVO vo = new RestaurantVO();
         vo.setRestaurantId(restaurantId);
 
-        List<RestaurantInfoVO> list = dao.infoSelect(vo);
+        List<JoinVO> list = dao.restList(vo);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
+
     @GetMapping("/restaurant")
     public ResponseEntity<List<JoinVO>> joinInfo (@RequestParam String restaurantId){
         RestaurantDAO dao = new RestaurantDAO();
@@ -30,6 +41,16 @@ public class RestaurantController {
         vo.setRestaurantId(restaurantId);
 
         List<JoinVO> list = dao.rtSelect(vo);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @GetMapping("/restaurant/info")
+    public ResponseEntity<List<RestaurantInfoVO>> restaurantInfo(@RequestParam String restaurantId){
+        RestaurantDAO dao = new RestaurantDAO();
+        RestaurantVO vo = new RestaurantVO();
+        vo.setRestaurantId(restaurantId);
+
+        List<RestaurantInfoVO> list = dao.infoSelect(vo);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
@@ -52,6 +73,5 @@ public class RestaurantController {
         List<ReviewVO> list = dao.reviewSelect(vo);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
-
 
 }

@@ -10,6 +10,6 @@ public class JoinVO {
     private String name;
     private String phone;
     private String addr;
-    private double rating;
-
+    private double avgRating;
+    private int reviewCount;
 }

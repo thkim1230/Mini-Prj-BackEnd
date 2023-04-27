@@ -14,5 +14,5 @@ public class ReviewVO {
     private String reviewContent;
     private String reviewImage;
     private Date reviewDate;
-    private double rating;
+    private double reviewRating;
 }
