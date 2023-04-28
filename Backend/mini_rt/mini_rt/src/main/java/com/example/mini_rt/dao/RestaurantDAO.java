@@ -7,6 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class RestaurantDAO {
     private Connection conn = null;
     private Statement stmt = null;
@@ -139,44 +140,25 @@ public class RestaurantDAO {
         }
         return list;
     }
-    // 매장 아이디 값만 불러오기
-    public List<String> restIdList (){
-        List<String> list = new ArrayList<>();
-
-        try{
-            String sql ="SELECT RESTAURANT_ID FROM RESTAURANT";
-            conn = Common.getConnection();
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery(sql);
-            while (rs.next()){
-                String id = rs.getString("RESTAURANT_ID");
-                list.add(id);
-            }
-            Common.close(rs);
-            Common.close(stmt);
-            Common.close(conn);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return list;
-    }
     // 매장 리스트
-    public List<JoinVO> restList (RestaurantVO restaurantVO){
+    public List<JoinVO> restList (){
         List<JoinVO> list = new ArrayList<>();
 
         try{
-            String sql = "SELECT RESTAURANT_NAME,RESTAURANT_ADDR,TRUNC(AVG(RATING),1),COUNT(REVIEW_ID) FROM RESTAURANT JOIN RESTAURANT_INFO ON RESTAURANT.RESTAURANT_ID = RESTAURANT_INFO.RESTAURANT_ID JOIN REVIEW ON RESTAURANT.RESTAURANT_ID = REVIEW.RESTAURANT_ID WHERE RESTAURANT.RESTAURANT_ID =? GROUP BY RESTAURANT_NAME,RESTAURANT_PHONE,RESTAURANT_ADDR";
             conn = Common.getConnection();
-            pStmt = conn.prepareStatement(sql);
-            pStmt.setString(1, restaurantVO.getRestaurantId());
-            rs = pStmt.executeQuery();
+            stmt = conn.createStatement();
+
+            String sql = "SELECT RESTAURANT.RESTAURANT_ID,RESTAURANT_NAME,RESTAURANT_ADDR,TRUNC(AVG(RATING),1),COUNT(REVIEW_ID) FROM RESTAURANT JOIN RESTAURANT_INFO ON RESTAURANT.RESTAURANT_ID = RESTAURANT_INFO.RESTAURANT_ID JOIN REVIEW ON RESTAURANT.RESTAURANT_ID = REVIEW.RESTAURANT_ID GROUP BY RESTAURANT.RESTAURANT_ID,RESTAURANT_NAME,RESTAURANT_ADDR";
+            rs = stmt.executeQuery(sql);
             while (rs.next()){
+                String id = rs.getString("RESTAURANT_ID");
                 String name = rs.getString("RESTAURANT_NAME");
                 String addr = rs.getString("RESTAURANT_ADDR");
                 double avgRating = rs.getDouble("TRUNC(AVG(RATING),1)");
                 int reviewCount = rs.getInt("COUNT(REVIEW_ID)");
 
                 JoinVO vo = new JoinVO();
+                vo.setId(id);
                 vo.setName(name);
                 vo.setAddr(addr);
                 vo.setAvgRating(avgRating);
@@ -184,12 +166,30 @@ public class RestaurantDAO {
                 list.add(vo);
             }
             Common.close(rs);
-            Common.close(pStmt);
+            Common.close(stmt);
             Common.close(conn);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return list;
+    }
+    // 리뷰 추가
+    public void addReview(String title, String content, double rating) {
+        String sql = "INSERT INTO REVIEW(RESTAURANT_ID,REVIEW_TITLE,REVIEW_CONTENT,REVIEW_DATE,RATING) VALUES(?,?,?,SYSDATE,?)";
+        try {
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, title);
+            pStmt.setString(2, content);
+            pStmt.setDouble(3, rating);
+
+            pStmt.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Common.close(pStmt);
+        Common.close(conn);
     }
 
 }

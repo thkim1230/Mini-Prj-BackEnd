@@ -15,21 +15,12 @@ import java.util.List;
 public class RestaurantController {
 
 
-    @GetMapping("/")
-    public ResponseEntity<List<String>> restaurantIdList () {
-        RestaurantDAO dao = new RestaurantDAO();
-
-        List<String> list = dao.restIdList();
-        return new ResponseEntity<>(list, HttpStatus.OK);
-    }
 
     @GetMapping("/list")
-    public ResponseEntity<List<JoinVO>> restaurantList (@RequestParam String restaurantId){
+    public ResponseEntity<List<JoinVO>> restaurantList (){
         RestaurantDAO dao = new RestaurantDAO();
-        RestaurantVO vo = new RestaurantVO();
-        vo.setRestaurantId(restaurantId);
 
-        List<JoinVO> list = dao.restList(vo);
+        List<JoinVO> list = dao.restList();
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
