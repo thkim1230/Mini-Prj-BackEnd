@@ -7,6 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class RestaurantDAO {
     private Connection conn = null;
     private Statement stmt = null;
@@ -50,7 +51,7 @@ public class RestaurantDAO {
     public List<JoinVO> rtSelect(RestaurantVO restaurantVO){
         List<JoinVO> list = new ArrayList<>();
         try{
-            String sql = "SELECT RESTAURANT_NAME,RESTAURANT_PHONE,RESTAURANT_ADDR,AVG(RATING) FROM RESTAURANT JOIN RESTAURANT_INFO ON RESTAURANT.RESTAURANT_ID = RESTAURANT_INFO.RESTAURANT_ID JOIN REVIEW ON RESTAURANT.RESTAURANT_ID = REVIEW.RESTAURANT_ID WHERE RESTAURANT.RESTAURANT_ID =? GROUP BY RESTAURANT_NAME,RESTAURANT_PHONE,RESTAURANT_ADDR";
+            String sql = "SELECT RESTAURANT_NAME,RESTAURANT_PHONE,RESTAURANT_ADDR,TRUNC(AVG(RATING),1) FROM RESTAURANT JOIN RESTAURANT_INFO ON RESTAURANT.RESTAURANT_ID = RESTAURANT_INFO.RESTAURANT_ID JOIN REVIEW ON RESTAURANT.RESTAURANT_ID = REVIEW.RESTAURANT_ID WHERE RESTAURANT.RESTAURANT_ID =? GROUP BY RESTAURANT_NAME,RESTAURANT_PHONE,RESTAURANT_ADDR";
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1, restaurantVO.getRestaurantId());
@@ -59,12 +60,12 @@ public class RestaurantDAO {
                 String name = rs.getString("RESTAURANT_NAME");
                 String phone = rs.getString("RESTAURANT_PHONE");
                 String addr = rs.getString("RESTAURANT_ADDR");
-                double rating = rs.getDouble("AVG(RATING)");
+                double avgRating = rs.getDouble("TRUNC(AVG(RATING),1)");
                 JoinVO vo = new JoinVO();
                 vo.setName(name);
                 vo.setPhone(phone);
                 vo.setAddr(addr);
-                vo.setRating(rating);
+                vo.setAvgRating(avgRating);
                 list.add(vo);
             }
             Common.close(rs);
@@ -120,14 +121,14 @@ public class RestaurantDAO {
             while (rs.next()){
                 String title = rs.getString("REVIEW_TITLE");
                 String content = rs.getString("REVIEW_CONTENT");
-                double rating = rs.getDouble("RATING");
-                Date rvDate = rs.getDate("REVIEW_DATE");
+                double reviewRating = rs.getDouble("RATING");
+                Date reviewDate = rs.getDate("REVIEW_DATE");
 
                 ReviewVO vo = new ReviewVO();
                 vo.setReviewTitle(title);
                 vo.setReviewContent(content);
-                vo.setRating(rating);
-                vo.setReviewDate(rvDate);
+                vo.setReviewRating(reviewRating);
+                vo.setReviewDate(reviewDate);
                 list.add(vo);
             }
             Common.close(rs);
@@ -139,4 +140,56 @@ public class RestaurantDAO {
         }
         return list;
     }
+    // 매장 리스트
+    public List<JoinVO> restList (){
+        List<JoinVO> list = new ArrayList<>();
+
+        try{
+            conn = Common.getConnection();
+            stmt = conn.createStatement();
+
+            String sql = "SELECT RESTAURANT.RESTAURANT_ID,RESTAURANT_NAME,RESTAURANT_ADDR,TRUNC(AVG(RATING),1),COUNT(REVIEW_ID) FROM RESTAURANT JOIN RESTAURANT_INFO ON RESTAURANT.RESTAURANT_ID = RESTAURANT_INFO.RESTAURANT_ID JOIN REVIEW ON RESTAURANT.RESTAURANT_ID = REVIEW.RESTAURANT_ID GROUP BY RESTAURANT.RESTAURANT_ID,RESTAURANT_NAME,RESTAURANT_ADDR";
+            rs = stmt.executeQuery(sql);
+            while (rs.next()){
+                String id = rs.getString("RESTAURANT_ID");
+                String name = rs.getString("RESTAURANT_NAME");
+                String addr = rs.getString("RESTAURANT_ADDR");
+                double avgRating = rs.getDouble("TRUNC(AVG(RATING),1)");
+                int reviewCount = rs.getInt("COUNT(REVIEW_ID)");
+
+                JoinVO vo = new JoinVO();
+                vo.setId(id);
+                vo.setName(name);
+                vo.setAddr(addr);
+                vo.setAvgRating(avgRating);
+                vo.setReviewCount(reviewCount);
+                list.add(vo);
+            }
+            Common.close(rs);
+            Common.close(stmt);
+            Common.close(conn);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    // 리뷰 추가
+    public void addReview(String title, String content, double rating) {
+        String sql = "INSERT INTO REVIEW(RESTAURANT_ID,REVIEW_TITLE,REVIEW_CONTENT,REVIEW_DATE,RATING) VALUES(?,?,?,SYSDATE,?)";
+        try {
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, title);
+            pStmt.setString(2, content);
+            pStmt.setDouble(3, rating);
+
+            pStmt.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Common.close(pStmt);
+        Common.close(conn);
+    }
+
 }
