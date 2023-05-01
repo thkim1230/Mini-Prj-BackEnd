@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -56,13 +57,25 @@ public class RestaurantController {
     }
 
     @GetMapping("/restaurant/review")
-    public ResponseEntity<List<ReviewVO>> restaurantReview(@RequestParam String restaurantId){
+    public ResponseEntity<List<ReviewJoinVO>> restaurantReview(@RequestParam String restaurantId){
         RestaurantDAO dao = new RestaurantDAO();
         RestaurantVO vo = new RestaurantVO();
         vo.setRestaurantId(restaurantId);
 
-        List<ReviewVO> list = dao.reviewSelect(vo);
+        List<ReviewJoinVO> list = dao.reviewSelect(vo);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
+    @PostMapping("/restaurant/add/review")
+    public ResponseEntity<Void> addReview(@RequestBody Map<String, String> reviewData) {
+        String getRestId = reviewData.get("restId");
+        String getMemberId = reviewData.get("memberId");
+        String getTitle = reviewData.get("title");
+        String getContent = reviewData.get("content");
+        Double getRating = Double.parseDouble(reviewData.get("rating"));
+
+        RestaurantDAO dao = new RestaurantDAO();
+        dao.addReview(getRestId, getMemberId, getTitle, getContent, getRating);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

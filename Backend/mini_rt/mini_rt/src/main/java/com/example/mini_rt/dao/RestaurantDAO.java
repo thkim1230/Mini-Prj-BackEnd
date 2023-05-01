@@ -109,22 +109,24 @@ public class RestaurantDAO {
 
 
     // 리뷰 정보 불러오기
-    public List<ReviewVO> reviewSelect(RestaurantVO restaurantVO){
-        List<ReviewVO> list = new ArrayList<>();
+    public List<ReviewJoinVO> reviewSelect(RestaurantVO restaurantVO){
+        List<ReviewJoinVO> list = new ArrayList<>();
 
         try{
-            String sql ="SELECT REVIEW_TITLE,REVIEW_CONTENT,RATING,REVIEW_DATE FROM REVIEW WHERE RESTAURANT_ID = ?";
+            String sql ="SELECT NICKNAME,REVIEW_TITLE,REVIEW_CONTENT,RATING,REVIEW_DATE FROM REVIEW JOIN MEMBER_INFO ON REVIEW.MEMBER_ID = MEMBER_INFO.MEMBER_ID WHERE RESTAURANT_ID = ?";
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1, restaurantVO.getRestaurantId());
             rs = pStmt.executeQuery();
             while (rs.next()){
+                String nickName = rs.getString("NICKNAME");
                 String title = rs.getString("REVIEW_TITLE");
                 String content = rs.getString("REVIEW_CONTENT");
                 double reviewRating = rs.getDouble("RATING");
                 Date reviewDate = rs.getDate("REVIEW_DATE");
 
-                ReviewVO vo = new ReviewVO();
+                ReviewJoinVO vo = new ReviewJoinVO();
+                vo.setNickName(nickName);
                 vo.setReviewTitle(title);
                 vo.setReviewContent(content);
                 vo.setReviewRating(reviewRating);
@@ -174,15 +176,16 @@ public class RestaurantDAO {
         return list;
     }
     // 리뷰 추가
-    public void addReview(String title, String content, double rating) {
-        String sql = "INSERT INTO REVIEW(RESTAURANT_ID,REVIEW_TITLE,REVIEW_CONTENT,REVIEW_DATE,RATING) VALUES(?,?,?,SYSDATE,?)";
+    public void addReview(String restId, String memId,String title, String content, double rating) {
+        String sql = "INSERT INTO REVIEW(REVIEW_ID,RESTAURANT_ID,MEMBER_ID,REVIEW_TITLE,REVIEW_CONTENT,RATING,REVIEW_DATE) VALUES(SEQ_REVIEW_ID,?,?,?,?,?,SYSDATE)";
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
-            pStmt.setString(1, title);
-            pStmt.setString(2, content);
-            pStmt.setDouble(3, rating);
-
+            pStmt.setString(1, restId);
+            pStmt.setString(2, memId);
+            pStmt.setString(3, title);
+            pStmt.setString(4, content);
+            pStmt.setDouble(5, rating);
             pStmt.executeUpdate();
 
         } catch (Exception e) {
