@@ -176,8 +176,10 @@ public class RestaurantDAO {
         return list;
     }
     // 리뷰 추가
-    public void addReview(String restId, String memId,String title, String content, double rating) {
-        String sql = "INSERT INTO REVIEW(REVIEW_ID,RESTAURANT_ID,MEMBER_ID,REVIEW_TITLE,REVIEW_CONTENT,RATING,REVIEW_DATE) VALUES(SEQ_REVIEW_ID,?,?,?,?,?,SYSDATE)";
+    public boolean addReview(String restId, String memId, String title, String content, double rating) {
+        int result = 0;
+        String sql = "INSERT INTO REVIEW(REVIEW_ID,RESTAURANT_ID,MEMBER_ID,REVIEW_TITLE,REVIEW_CONTENT,RATING,REVIEW_DATE) VALUES(SEQ_REVIEW_ID.NEXTVAL,?,?,?,?,?,SYSDATE)";
+
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
@@ -186,13 +188,16 @@ public class RestaurantDAO {
             pStmt.setString(3, title);
             pStmt.setString(4, content);
             pStmt.setDouble(5, rating);
-            pStmt.executeUpdate();
+            result = pStmt.executeUpdate();
+            System.out.println(result);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         Common.close(pStmt);
         Common.close(conn);
+        if(result == 1) return true;
+        else return false;
     }
 
 }

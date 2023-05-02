@@ -10,12 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:3000")
-@RestController
+@CrossOrigin(origins = "http://localhost:3000") // 이 주소를 허용해주는 코드
+@RestController //컨트롤러 선언
 
 public class RestaurantController {
-
-
 
     @GetMapping("/list")
     public ResponseEntity<List<JoinVO>> restaurantList (){
@@ -67,7 +65,7 @@ public class RestaurantController {
     }
 
     @PostMapping("/restaurant/add/review")
-    public ResponseEntity<Void> addReview(@RequestBody Map<String, String> reviewData) {
+    public ResponseEntity<Boolean> addReview(@RequestBody Map<String, String> reviewData) {
         String getRestId = reviewData.get("restId");
         String getMemberId = reviewData.get("memberId");
         String getTitle = reviewData.get("title");
@@ -75,7 +73,7 @@ public class RestaurantController {
         Double getRating = Double.parseDouble(reviewData.get("rating"));
 
         RestaurantDAO dao = new RestaurantDAO();
-        dao.addReview(getRestId, getMemberId, getTitle, getContent, getRating);
-        return new ResponseEntity<>(HttpStatus.OK);
+        boolean list = dao.addReview(getRestId, getMemberId, getTitle, getContent, getRating);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 }

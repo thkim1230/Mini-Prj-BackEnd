@@ -27,8 +27,8 @@ import java.util.List;
                 while(rs.next()) { // 읽은 데이타가 있으면 true
                     String sqlId = rs.getString("MEMBER_ID"); // 쿼리문 수행 결과에서 ID값을 가져 옴
                     String sqlPwd = rs.getString("PASSWORD");
-                    System.out.println("ID : " + sqlId);
-                    System.out.println("PWD : " + sqlPwd);
+//                    System.out.println("ID : " + sqlId);
+//                    System.out.println("PWD : " + sqlPwd);
                     if(id.equals(sqlId) && pwd.equals(sqlPwd)) {
                         Common.close(rs);
                         Common.close(stmt);
