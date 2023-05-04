@@ -124,4 +124,23 @@ public class RestaurantController {
         boolean list = dao.delRevLike(getRevId, getMemberId);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
+    @GetMapping("/restaurant/liked")
+    public ResponseEntity<List<RestLikedVO>> restLiked(@RequestParam String memberId){
+        RestaurantDAO dao = new RestaurantDAO();
+        MemberVO vo = new MemberVO();
+        vo.setMemId(memberId);
+
+        List<RestLikedVO> list = dao.restLikedSelect(vo);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+    @GetMapping("/review/liked")
+    public ResponseEntity<List<ReviewLikedVO>> revLiked(@RequestParam String memberId){
+        RestaurantDAO dao = new RestaurantDAO();
+        MemberVO vo = new MemberVO();
+        vo.setMemId(memberId);
+
+        List<ReviewLikedVO> list = dao.revLikedSelect(vo);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
 }
