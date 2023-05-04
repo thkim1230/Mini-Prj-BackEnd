@@ -113,13 +113,14 @@ public class RestaurantDAO {
         List<ReviewJoinVO> list = new ArrayList<>();
 
         try{
-            String sql ="SELECT NICKNAME,REVIEW_TITLE,REVIEW_CONTENT,RATING,REVIEW_DATE FROM REVIEW JOIN MEMBER_INFO ON REVIEW.MEMBER_ID = MEMBER_INFO.MEMBER_ID WHERE RESTAURANT_ID = ?";
+            String sql ="SELECT NICKNAME,REVIEW_ID,REVIEW_TITLE,REVIEW_CONTENT,RATING,REVIEW_DATE FROM REVIEW JOIN MEMBER_INFO ON REVIEW.MEMBER_ID = MEMBER_INFO.MEMBER_ID WHERE RESTAURANT_ID = ?";
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1, restaurantVO.getRestaurantId());
             rs = pStmt.executeQuery();
             while (rs.next()){
                 String nickName = rs.getString("NICKNAME");
+                int reviewId = rs.getInt("REVIEW_ID");
                 String title = rs.getString("REVIEW_TITLE");
                 String content = rs.getString("REVIEW_CONTENT");
                 double reviewRating = rs.getDouble("RATING");
@@ -127,6 +128,7 @@ public class RestaurantDAO {
 
                 ReviewJoinVO vo = new ReviewJoinVO();
                 vo.setNickName(nickName);
+                vo.setReviewId(reviewId);
                 vo.setReviewTitle(title);
                 vo.setReviewContent(content);
                 vo.setReviewRating(reviewRating);
@@ -189,6 +191,7 @@ public class RestaurantDAO {
             pStmt.setString(4, content);
             pStmt.setDouble(5, rating);
             result = pStmt.executeUpdate();
+
             System.out.println(result);
 
         } catch (Exception e) {
@@ -198,6 +201,165 @@ public class RestaurantDAO {
         Common.close(conn);
         if(result == 1) return true;
         else return false;
+    }
+    // 문의 등록
+    public boolean addInquiry(String restId, String memId, String title, String content) {
+        int result = 0;
+        String sql = "INSERT INTO INQUIRY(INQUIRY_ID,RESTAURANT_ID,MEMBER_ID,INQUIRY_TITLE,INQUIRY_CONTENT,INQUIRY_DATE) VALUES(SEQ_INQUIRY_ID.NEXTVAL,?,?,?,?,SYSDATE)";
+
+        try {
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, restId);
+            pStmt.setString(2, memId);
+            pStmt.setString(3, title);
+            pStmt.setString(4, content);
+            result = pStmt.executeUpdate();
+
+            System.out.println(result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Common.close(pStmt);
+        Common.close(conn);
+        if(result == 1) return true;
+        else return false;
+    }
+    // 찜 등록
+    public boolean addRestLike(String restId, String memId) {
+        int result = 0;
+        String sql = "INSERT INTO RESTAURANT_LIKE(RESTAURANT_ID,MEMBER_ID) VALUES(?,?)";
+
+        try {
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, restId);
+            pStmt.setString(2, memId);
+            result = pStmt.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Common.close(pStmt);
+        Common.close(conn);
+        if(result == 1) return true;
+        else return false;
+    }
+    // 리뷰 공감 추가
+    public boolean addRevLike(String revId, String memId) {
+        int result = 0;
+        String sql = "INSERT INTO REVIEW_LIKE(REVIEW_ID,MEMBER_ID) VALUES(?,?)";
+
+        try {
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, revId);
+            pStmt.setString(2, memId);
+            result = pStmt.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Common.close(pStmt);
+        Common.close(conn);
+        if(result == 1) return true;
+        else return false;
+    }
+    // 찜 삭제
+    public boolean delRestLike(String restId,String memId) {
+        int result = 0;
+        String sql = "DELETE FROM RESTAURANT_LIKE WHERE RESTAURANT_ID = ? AND MEMBER_ID = ?";
+
+        try {
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, restId);
+            pStmt.setString(2, memId);
+
+            result = pStmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Common.close(pStmt);
+        Common.close(conn);
+        if(result == 1) return true;
+        else return false;
+    }
+    // 리뷰 공감 삭제
+    public boolean delRevLike(String revId,String memId) {
+        int result = 0;
+        String sql = "DELETE FROM REVIEW_LIKE WHERE REVIEW_ID = ? AND MEMBER_ID = ?";
+
+        try {
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, revId);
+            pStmt.setString(2, memId);
+
+            result = pStmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Common.close(pStmt);
+        Common.close(conn);
+        if(result == 1) return true;
+        else return false;
+    }
+    // 찜 리스트 조회
+    public List<RestLikedVO> restLikedSelect(MemberVO memberVO){
+        List<RestLikedVO> list = new ArrayList<>();
+
+        try{
+            String sql ="SELECT RESTAURANT_ID,MEMBER_ID FROM RESTAURANT_LIKE WHERE MEMBER_ID = ?";
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, memberVO.getMemId());
+            rs = pStmt.executeQuery();
+            while (rs.next()){
+                String restId = rs.getString("RESTAURANT_ID");
+                String memId = rs.getString("MEMBER_ID");
+                RestLikedVO vo = new RestLikedVO();
+                vo.setRestId(restId);
+                vo.setMemId(memId);
+                list.add(vo);
+            }
+            Common.close(rs);
+            Common.close(pStmt);
+            Common.close(conn);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return list;
+    }
+    // 리뷰 공감 리스트 조회
+    public List<ReviewLikedVO> revLikedSelect(MemberVO memberVO){
+        List<ReviewLikedVO> list = new ArrayList<>();
+
+        try{
+            String sql ="SELECT * FROM REVIEW_LIKE WHERE MEMBER_ID = ?";
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, memberVO.getMemId());
+            rs = pStmt.executeQuery();
+            while (rs.next()){
+                String revId = rs.getString("REVIEW_ID");
+                String memId = rs.getString("MEMBER_ID");
+
+                ReviewLikedVO vo = new ReviewLikedVO();
+                vo.setRevId(revId);
+                vo.setMemId(memId);
+                list.add(vo);
+            }
+            Common.close(rs);
+            Common.close(pStmt);
+            Common.close(conn);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return list;
     }
 
 }

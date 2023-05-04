@@ -76,4 +76,71 @@ public class RestaurantController {
         boolean list = dao.addReview(getRestId, getMemberId, getTitle, getContent, getRating);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+    @PostMapping("/restaurant/add/inquiry")
+    public ResponseEntity<Boolean> addInquiry(@RequestBody Map<String, String> inquiryData) {
+        String getRestId = inquiryData.get("restId");
+        String getMemberId = inquiryData.get("memberId");
+        String getTitle = inquiryData.get("title");
+        String getContent = inquiryData.get("content");
+
+        RestaurantDAO dao = new RestaurantDAO();
+        boolean list = dao.addInquiry(getRestId, getMemberId, getTitle, getContent);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+    @PostMapping("/restaurant/add/restLike")
+    public ResponseEntity<Boolean> addRestLike(@RequestBody Map<String, String> likeData) {
+        String getRestId = likeData.get("restId");
+        String getMemberId = likeData.get("memberId");
+
+        RestaurantDAO dao = new RestaurantDAO();
+        boolean list = dao.addRestLike(getRestId, getMemberId);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+    @PostMapping("/restaurant/add/revLike")
+    public ResponseEntity<Boolean> addRevLike(@RequestBody Map<String, String> likeData) {
+        String getRevId = likeData.get("revId");
+        String getMemberId = likeData.get("memberId");
+
+        RestaurantDAO dao = new RestaurantDAO();
+        boolean list = dao.addRevLike(getRevId, getMemberId);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+    @PostMapping("/restaurant/del/restLike")
+    public ResponseEntity<Boolean> delRestLike(@RequestBody Map<String, String> delData) {
+        String getRestId = delData.get("restId");
+        String getMemberId = delData.get("memberId");
+
+        RestaurantDAO dao = new RestaurantDAO();
+        boolean list = dao.delRestLike(getRestId, getMemberId);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @PostMapping("/restaurant/del/revLike")
+    public ResponseEntity<Boolean> delRevLike(@RequestBody Map<String, String> delData) {
+        String getRevId = delData.get("revId");
+        String getMemberId = delData.get("memberId");
+
+        RestaurantDAO dao = new RestaurantDAO();
+        boolean list = dao.delRevLike(getRevId, getMemberId);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @GetMapping("/restaurant/liked")
+    public ResponseEntity<List<RestLikedVO>> restLiked(@RequestParam String memberId){
+        RestaurantDAO dao = new RestaurantDAO();
+        MemberVO vo = new MemberVO();
+        vo.setMemId(memberId);
+
+        List<RestLikedVO> list = dao.restLikedSelect(vo);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+    @GetMapping("/review/liked")
+    public ResponseEntity<List<ReviewLikedVO>> revLiked(@RequestParam String memberId){
+        RestaurantDAO dao = new RestaurantDAO();
+        MemberVO vo = new MemberVO();
+        vo.setMemId(memberId);
+
+        List<ReviewLikedVO> list = dao.revLikedSelect(vo);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
 }

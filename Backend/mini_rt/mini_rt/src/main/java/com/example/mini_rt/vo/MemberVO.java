@@ -8,7 +8,6 @@ import java.sql.Date;
 
 @Getter
 @Setter
-@AllArgsConstructor
 
 public class MemberVO {
 
