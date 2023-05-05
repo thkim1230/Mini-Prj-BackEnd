@@ -1,4 +1,4 @@
-package com.example.mini_rt.contoller;
+package com.example.mini_rt.controller;
 
 
 import com.example.mini_rt.dao.RestaurantDAO;

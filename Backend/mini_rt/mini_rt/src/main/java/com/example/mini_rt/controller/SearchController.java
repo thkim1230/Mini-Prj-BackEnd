@@ -1,8 +1,7 @@
-package com.example.mini_rt.contoller;
+package com.example.mini_rt.controller;
 
 import com.example.mini_rt.dao.SearchDAO;
 import com.example.mini_rt.vo.RestListVO;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
