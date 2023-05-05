@@ -63,7 +63,17 @@ import java.util.List;
                     String addr = rs.getString("ADDRESS");
                     Date joinDate = rs.getDate("JOIN_DATE");
                     String imgFileName = rs.getString("IMAGE_FILE_NAME");
-                    MemberVO vo = new MemberVO(memId,pwd,name,nickName,eMail,phoneNum,addr,joinDate,imgFileName); //하나의 행(레코드)에 대한 정보저장을 위한 객체생성
+
+                    MemberVO vo = new MemberVO();
+                    vo.setMemId(memId);
+                    vo.setPwd(pwd);
+                    vo.setName(name);
+                    vo.setNickName(nickName);
+                    vo.setEMail(eMail);
+                    vo.setPhoneNum(phoneNum);
+                    vo.setAddr(addr);
+                    vo.setJoinDate(joinDate);
+                    vo.setImgFileName(imgFileName);
                     list.add(vo);
 
                 }
