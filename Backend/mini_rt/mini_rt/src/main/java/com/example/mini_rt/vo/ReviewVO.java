@@ -10,6 +10,7 @@ public class ReviewVO {
     private int reviewId;
     private String memberId;
     private String restaurantId;
+    private String restaurantName;
     private String reviewTitle;
     private String reviewContent;
     private String reviewImage;
