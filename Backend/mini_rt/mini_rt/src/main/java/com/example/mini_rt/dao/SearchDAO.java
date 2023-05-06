@@ -259,7 +259,7 @@ public class SearchDAO {
                 " WHERE R.RESTAURANT_ID IN (SELECT DISTINCT R.RESTAURANT_ID FROM RESTAURANT R" +
                 " JOIN RESTAURANT_INFO RI ON R.RESTAURANT_ID = RI.RESTAURANT_ID" +
                 " JOIN R_MENU RM ON RI.RESTAURANT_ID = RM.RESTAURANT_ID WHERE";
-        if(kw != null) {
+        if(kw != null && kw.length != 0) {
             if (kw.length == 1) {
                 sql = sql + " (RESTAURANT_NAME LIKE '%" + kw[0] + "%' OR RESTAURANT_CATEGORY LIKE '%" + kw[0] + "%' OR RESTAURANT_ADDR LIKE '%" + kw[0] + "%' OR MENU_NAME LIKE '%" + kw[0] + "%' OR RESTAURANT_INTRODUCE LIKE '%" + kw[0] + "%')";
             } else {
@@ -346,7 +346,7 @@ public class SearchDAO {
 
         // 앞 배열이 비어있지 않으면 or 붙이고 아니면 처음에 안 붙이고 카테고리 바뀔 때 AND 사용
         if(cat.length != 0) {
-            if (region != null || !region.isEmpty()) {
+            if (region != null && !region.isEmpty()) {
                 sql = sql + " AND ";
                 for (int i = 0; i < cat.length; i++) {
                     if(cat.length != 1) {
@@ -374,7 +374,7 @@ public class SearchDAO {
                 else if (price[i].equals("5만원대")) price[i] = "50000 <= RM.MENU_PRICE AND RM.MENU_PRICE < 60000";
                 else if (price[i].equals("10만원 이상")) price[i] = "100000 <= RM.MENU_PRICE";
             }
-            if (!region.isEmpty() && cat.length != 0) {
+            if (!region.isEmpty() && cat.length != 0 && kw != null && kw.length != 0) {
                 for (int i = 0; i < price.length; i++) {
                     if (price.length != 1) {
                         if (i == 0) sql = sql + "(" + price[i];
