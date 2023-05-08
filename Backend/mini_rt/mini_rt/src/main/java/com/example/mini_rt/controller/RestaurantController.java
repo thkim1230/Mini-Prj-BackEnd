@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -141,6 +142,19 @@ public class RestaurantController {
         vo.setMemId(memberId);
 
         List<ReviewLikedVO> list = dao.revLikedSelect(vo);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+    @PostMapping("/restaurant/add/reservation")
+    public ResponseEntity<Boolean> addRes(@RequestBody Map<String, String> resData){
+        String getRestId = resData.get("restId");
+        String getMemberId = resData.get("memberId");
+        Date getResDate = Date.valueOf(resData.get("resDate"));
+        String getResReq = resData.get("resReq");
+        int getResSeat = Integer.parseInt(resData.get("resSeat"));
+        int getResPeo = Integer.parseInt(resData.get("resPeo"));
+
+        RestaurantDAO dao = new RestaurantDAO();
+        boolean list = dao.addRes(getRestId,getMemberId,getResDate,getResReq,getResSeat,getResPeo);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 }
