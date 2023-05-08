@@ -1,7 +1,9 @@
 package com.example.mini_rt.controller;
 
 import com.example.mini_rt.dao.SearchDAO;
+import com.example.mini_rt.vo.RestLikedVO;
 import com.example.mini_rt.vo.RestListVO;
+import com.example.mini_rt.vo.ReviewVO;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,7 @@ import java.util.Map;
 @RestController
 public class SearchController {
     @Autowired
-    SearchDAO dao = new SearchDAO();
+    private SearchDAO dao = new SearchDAO();
     @PostMapping("/restaurantList")
     public ResponseEntity<List<RestListVO>> restList(@RequestBody Restaurant rst){
 
@@ -30,16 +32,21 @@ public class SearchController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-//    @PostMapping("/restaurantList/search")
-//    public ResponseEntity<List<RestListVO>> searchBar(@RequestBody searchKeyWord skw){
-//        List<RestListVO> list = dao.searchRest(skw.getKeyword());
-//        return new ResponseEntity<>(list, HttpStatus.OK);
-//    }
-
     @GetMapping("/restaurantList")
     public ResponseEntity<List<RestListVO>> popularRest(@RequestParam("popular") String popular){
-
         List<RestListVO> list = dao.popularList();
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @GetMapping("/weeklyTop3Rest")
+    public ResponseEntity<List<RestListVO>> weeklyTop3Rest(){
+        List<RestListVO> list = dao.weeklyTop3Rest();
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @GetMapping("weeklyTop3Review")
+    public ResponseEntity<List<ReviewVO>> weeklyTop3Review(){
+        List<ReviewVO> list = dao.weeklyTop3Review();
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 

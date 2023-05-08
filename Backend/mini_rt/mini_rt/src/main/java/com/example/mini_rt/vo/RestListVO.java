@@ -14,5 +14,6 @@ public class RestListVO {
     private int reservation;
     private double rating;
     private int reviews;
+    private String imageUrl;
 
 }
