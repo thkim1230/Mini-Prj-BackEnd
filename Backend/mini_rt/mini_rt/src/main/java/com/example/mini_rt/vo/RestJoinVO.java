@@ -6,7 +6,7 @@ import lombok.Setter;
 @Setter
 @Getter
 
-public class JoinVO {
+public class RestJoinVO {
     private String id;
     private String name;
     private String phone;

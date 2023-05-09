@@ -48,8 +48,8 @@ public class RestaurantDAO {
         return list;
     }
     // 상단 고정 매장 정보
-    public List<JoinVO> rtSelect(RestaurantVO restaurantVO){
-        List<JoinVO> list = new ArrayList<>();
+    public List<RestJoinVO> rtSelect(RestaurantVO restaurantVO){
+        List<RestJoinVO> list = new ArrayList<>();
         try{
             String sql = "SELECT RESTAURANT_NAME,RESTAURANT_PHONE,RESTAURANT_ADDR,TRUNC(AVG(RATING),1) FROM RESTAURANT JOIN RESTAURANT_INFO ON RESTAURANT.RESTAURANT_ID = RESTAURANT_INFO.RESTAURANT_ID JOIN REVIEW ON RESTAURANT.RESTAURANT_ID = REVIEW.RESTAURANT_ID WHERE RESTAURANT.RESTAURANT_ID =? GROUP BY RESTAURANT_NAME,RESTAURANT_PHONE,RESTAURANT_ADDR";
             conn = Common.getConnection();
@@ -61,7 +61,7 @@ public class RestaurantDAO {
                 String phone = rs.getString("RESTAURANT_PHONE");
                 String addr = rs.getString("RESTAURANT_ADDR");
                 double avgRating = rs.getDouble("TRUNC(AVG(RATING),1)");
-                JoinVO vo = new JoinVO();
+                RestJoinVO vo = new RestJoinVO();
                 vo.setName(name);
                 vo.setPhone(phone);
                 vo.setAddr(addr);
@@ -145,8 +145,8 @@ public class RestaurantDAO {
         return list;
     }
     // 매장 리스트
-    public List<JoinVO> restList (){
-        List<JoinVO> list = new ArrayList<>();
+    public List<RestJoinVO> restList (){
+        List<RestJoinVO> list = new ArrayList<>();
 
         try{
             conn = Common.getConnection();
@@ -161,7 +161,7 @@ public class RestaurantDAO {
                 double avgRating = rs.getDouble("TRUNC(AVG(RATING),1)");
                 int reviewCount = rs.getInt("COUNT(REVIEW_ID)");
 
-                JoinVO vo = new JoinVO();
+                RestJoinVO vo = new RestJoinVO();
                 vo.setId(id);
                 vo.setName(name);
                 vo.setAddr(addr);
@@ -247,14 +247,14 @@ public class RestaurantDAO {
         else return false;
     }
     // 리뷰 공감 추가
-    public boolean addRevLike(String revId, String memId) {
+    public boolean addRevLike(int revId, String memId) {
         int result = 0;
         String sql = "INSERT INTO REVIEW_LIKE(REVIEW_ID,MEMBER_ID) VALUES(?,?)";
 
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
-            pStmt.setString(1, revId);
+            pStmt.setInt(1, revId);
             pStmt.setString(2, memId);
             result = pStmt.executeUpdate();
 
@@ -287,14 +287,14 @@ public class RestaurantDAO {
         else return false;
     }
     // 리뷰 공감 삭제
-    public boolean delRevLike(String revId,String memId) {
+    public boolean delRevLike(int revId,String memId) {
         int result = 0;
         String sql = "DELETE FROM REVIEW_LIKE WHERE REVIEW_ID = ? AND MEMBER_ID = ?";
 
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
-            pStmt.setString(1, revId);
+            pStmt.setInt(1, revId);
             pStmt.setString(2, memId);
 
             result = pStmt.executeUpdate();
@@ -344,11 +344,11 @@ public class RestaurantDAO {
             pStmt.setString(1, memberVO.getMemId());
             rs = pStmt.executeQuery();
             while (rs.next()){
-                String revId = rs.getString("REVIEW_ID");
+                int revId = rs.getInt("REVIEW_ID");
                 String memId = rs.getString("MEMBER_ID");
 
                 ReviewLikedVO vo = new ReviewLikedVO();
-                vo.setRevId(revId);
+                vo.setReviewId(revId);
                 vo.setMemId(memId);
                 list.add(vo);
             }
