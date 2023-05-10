@@ -65,6 +65,15 @@ public class RestaurantController {
         List<ReviewJoinVO> list = dao.reviewSelect(vo);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+    @GetMapping("/review/detail")
+    public ResponseEntity<List<ReviewJoinVO>> reviewDetail(@RequestParam int reviewId){
+        RestaurantDAO dao = new RestaurantDAO();
+        ReviewVO vo = new ReviewVO();
+        vo.setReviewId(reviewId);
+
+        List<ReviewJoinVO> list = dao.reviewDetailSelect(vo);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
     // 리뷰 추가
 
     @PostMapping("/restaurant/add/review")

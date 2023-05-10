@@ -15,4 +15,5 @@ public class ReviewJoinVO {
     private String reviewImage;
     private Date reviewDate;
     private double reviewRating;
+    private int likeCnt;
 }
