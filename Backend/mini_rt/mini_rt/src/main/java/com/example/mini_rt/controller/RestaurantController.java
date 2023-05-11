@@ -17,16 +17,16 @@ import java.util.Map;
 public class RestaurantController {
 
     @GetMapping("/list")
-    public ResponseEntity<List<RestJoinVO>> restaurantList (){
+    public ResponseEntity<List<RestJoinVO>> restaurantList() {
         RestaurantDAO dao = new RestaurantDAO();
 
         List<RestJoinVO> list = dao.restList();
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-// 상단 고정 상세 정보
+    // 상단 고정 상세 정보
     @GetMapping("/restaurant")
-    public ResponseEntity<List<RestJoinVO>> joinInfo (@RequestParam String restaurantId){
+    public ResponseEntity<List<RestJoinVO>> joinInfo(@RequestParam String restaurantId) {
         RestaurantDAO dao = new RestaurantDAO();
         RestaurantVO vo = new RestaurantVO();
         vo.setRestaurantId(restaurantId);
@@ -37,7 +37,7 @@ public class RestaurantController {
 
     // 매장 상세 정보 불러오기
     @GetMapping("/restaurant/info")
-    public ResponseEntity<List<RestaurantInfoVO>> restaurantInfo(@RequestParam String restaurantId){
+    public ResponseEntity<List<RestaurantInfoVO>> restaurantInfo(@RequestParam String restaurantId) {
         RestaurantDAO dao = new RestaurantDAO();
         RestaurantVO vo = new RestaurantVO();
         vo.setRestaurantId(restaurantId);
@@ -45,9 +45,10 @@ public class RestaurantController {
         List<RestaurantInfoVO> list = dao.infoSelect(vo);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
     // 메뉴 정보 불러오기
     @GetMapping("/restaurant/menu")
-    public ResponseEntity<List<RestMenuVO>> restaurantMenu(@RequestParam String restaurantId){
+    public ResponseEntity<List<RestMenuVO>> restaurantMenu(@RequestParam String restaurantId) {
         RestaurantDAO dao = new RestaurantDAO();
         RestaurantVO vo = new RestaurantVO();
         vo.setRestaurantId(restaurantId);
@@ -55,9 +56,10 @@ public class RestaurantController {
         List<RestMenuVO> list = dao.menuSelect(vo);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
     // 리뷰 정보 불러오기
     @GetMapping("/restaurant/review")
-    public ResponseEntity<List<ReviewJoinVO>> restaurantReview(@RequestParam String restaurantId){
+    public ResponseEntity<List<ReviewJoinVO>> restaurantReview(@RequestParam String restaurantId) {
         RestaurantDAO dao = new RestaurantDAO();
         RestaurantVO vo = new RestaurantVO();
         vo.setRestaurantId(restaurantId);
@@ -65,8 +67,9 @@ public class RestaurantController {
         List<ReviewJoinVO> list = dao.reviewSelect(vo);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
     @GetMapping("/review/detail")
-    public ResponseEntity<List<ReviewJoinVO>> reviewDetail(@RequestParam int reviewId){
+    public ResponseEntity<List<ReviewJoinVO>> reviewDetail(@RequestParam int reviewId) {
         RestaurantDAO dao = new RestaurantDAO();
         ReviewVO vo = new ReviewVO();
         vo.setReviewId(reviewId);
@@ -88,6 +91,7 @@ public class RestaurantController {
         boolean list = dao.addReview(getRestId, getMemberId, getTitle, getContent, getRating);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
     //문의 추가
     @PostMapping("/restaurant/add/inquiry")
     public ResponseEntity<Boolean> addInquiry(@RequestBody Map<String, String> inquiryData) {
@@ -100,6 +104,7 @@ public class RestaurantController {
         boolean list = dao.addInquiry(getRestId, getMemberId, getTitle, getContent);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
     // 찜 추가
     @PostMapping("/restaurant/add/restLike")
     public ResponseEntity<Boolean> addRestLike(@RequestBody Map<String, String> likeData) {
@@ -110,6 +115,7 @@ public class RestaurantController {
         boolean list = dao.addRestLike(getRestId, getMemberId);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
     // 리뷰 공감 추가
     @PostMapping("/restaurant/add/revLike")
     public ResponseEntity<Boolean> addRevLike(@RequestBody Map<String, String> likeData) {
@@ -120,6 +126,7 @@ public class RestaurantController {
         boolean list = dao.addRevLike(getRevId, getMemberId);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
     // 찜 삭제
     @PostMapping("/restaurant/del/restLike")
     public ResponseEntity<Boolean> delRestLike(@RequestBody Map<String, String> delData) {
@@ -144,7 +151,7 @@ public class RestaurantController {
     // 찜 리스트 조회
 
     @GetMapping("/restaurant/liked")
-    public ResponseEntity<List<RestLikedVO>> restLiked(@RequestParam String memberId){
+    public ResponseEntity<List<RestLikedVO>> restLiked(@RequestParam String memberId) {
         RestaurantDAO dao = new RestaurantDAO();
         MemberVO vo = new MemberVO();
         vo.setMemId(memberId);
@@ -152,9 +159,10 @@ public class RestaurantController {
         List<RestLikedVO> list = dao.restLikedSelect(vo);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
     // 공감 리스트 조회
     @GetMapping("/review/liked")
-    public ResponseEntity<List<ReviewLikedVO>> revLiked(@RequestParam String memberId){
+    public ResponseEntity<List<ReviewLikedVO>> revLiked(@RequestParam String memberId) {
         RestaurantDAO dao = new RestaurantDAO();
         MemberVO vo = new MemberVO();
         vo.setMemId(memberId);
@@ -162,18 +170,29 @@ public class RestaurantController {
         List<ReviewLikedVO> list = dao.revLikedSelect(vo);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
     //예약 추가
     @PostMapping("/restaurant/add/reservation")
-    public ResponseEntity<Boolean> addRes(@RequestBody Map<String, String> resData){
+    public ResponseEntity<Boolean> addRes(@RequestBody Map<String, String> resData) {
         String getRestId = resData.get("restId");
         String getMemberId = resData.get("memberId");
-        Date getResDate = Date.valueOf(resData.get("resDate"));
+        String getResDate = resData.get("resDate");
         String getResReq = resData.get("resReq");
         int getResSeat = Integer.parseInt(resData.get("resSeat"));
         int getResPeo = Integer.parseInt(resData.get("resPeo"));
 
         RestaurantDAO dao = new RestaurantDAO();
-        boolean list = dao.addRes(getRestId,getMemberId,getResDate,getResReq,getResSeat,getResPeo);
+        boolean list = dao.addRes(getRestId, getMemberId, getResDate, getResReq, getResSeat, getResPeo);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    //좌석 조회
+    @GetMapping("/reservation/seat")
+    public ResponseEntity<List<ReservationVO>> resSeat(@RequestParam String date,@RequestParam String restaurantId, @RequestParam int seat) {
+        RestaurantDAO dao = new RestaurantDAO();
+        RestaurantVO vo = new RestaurantVO();
+        vo.setRestaurantId(restaurantId);
+        List<ReservationVO> list = dao.seatSelect(date,vo,seat);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 }

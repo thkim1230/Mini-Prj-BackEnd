@@ -400,16 +400,16 @@ public class RestaurantDAO {
         return list;
     }
     // 예약 추가
-    public boolean addRes(String restId,String memId,Date resDate,String resReq,int resSeat,int resPeo) {
+    public boolean addRes(String restId,String memId,String resDate,String resReq,int resSeat,int resPeo) {
         int result = 0;
-        String sql = "INSERT INTO RESERVATION(RESERVATION_ID,RESTAURANT_ID,MEMBER_ID,RESERVATION_DATE,RESERVATION_REQUEST,RESERVATION_SEAT,RESERVATION_PEOPLE) VALUES(SEQ_RES_ID.NEXTVAL,?,?,?,?,?,?)";
+        String sql = "INSERT INTO RESERVATION(RESERVATION_ID,RESTAURANT_ID,MEMBER_ID,RESERVATION_DATE,RESERVATION_REQUEST,RESERVATION_SEAT,RESERVATION_PEOPLE) VALUES(SEQ_RES_ID.NEXTVAL,?,?,TO_DATE(?,'YYYY-MM-DD HH24:MI:SS'),?,?,?)";
 
         try {
             conn = Common.getConnection();
             pStmt = conn.prepareStatement(sql);
             pStmt.setString(1, restId);
             pStmt.setString(2, memId);
-            pStmt.setDate(3, resDate);
+            pStmt.setString(3, resDate);
             pStmt.setString(4, resReq);
             pStmt.setInt(5, resSeat);
             pStmt.setInt(6, resPeo);
@@ -423,5 +423,34 @@ public class RestaurantDAO {
         Common.close(conn);
         if(result == 1) return true;
         else return false;
+    }
+    // 예약 좌석 조회
+    public List<ReservationVO> seatSelect(String date, RestaurantVO restaurantVO, int seatNum){
+        List<ReservationVO> list = new ArrayList<>();
+
+        try{
+            String sql ="SELECT RESERVATION_SEAT FROM RESERVATION WHERE RESERVATION_DATE = TO_DATE(?,'YYYY-MM-DD HH24:MI:SS') AND RESTAURANT_ID = ? AND RESERVATION_SEAT = ?";
+            conn = Common.getConnection();
+            pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1,date);
+            pStmt.setString(2,restaurantVO.getRestaurantId());
+            pStmt.setInt(3,seatNum);
+            rs = pStmt.executeQuery();
+
+            while (rs.next()){
+                int seat = rs.getInt("RESERVATION_SEAT");
+
+                ReservationVO vo = new ReservationVO();
+                vo.setResSeat(seat);
+                list.add(vo);
+            }
+            Common.close(rs);
+            Common.close(pStmt);
+            Common.close(conn);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return list;
     }
 }
