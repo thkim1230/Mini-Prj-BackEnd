@@ -67,7 +67,7 @@ public class RestaurantController {
         List<ReviewJoinVO> list = dao.reviewSelect(vo);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
-
+    //리뷰 상세 정보
     @GetMapping("/review/detail")
     public ResponseEntity<List<ReviewJoinVO>> reviewDetail(@RequestParam int reviewId) {
         RestaurantDAO dao = new RestaurantDAO();
@@ -86,9 +86,9 @@ public class RestaurantController {
         String getTitle = reviewData.get("title");
         String getContent = reviewData.get("content");
         Double getRating = Double.parseDouble(reviewData.get("rating"));
-
+        String getImage = reviewData.get("image");
         RestaurantDAO dao = new RestaurantDAO();
-        boolean list = dao.addReview(getRestId, getMemberId, getTitle, getContent, getRating);
+        boolean list = dao.addReview(getRestId, getMemberId, getTitle, getContent, getRating,getImage);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
